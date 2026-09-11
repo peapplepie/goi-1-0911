@@ -3,8 +3,13 @@ import pandas as pd
 import plotly.express as px
 import numpy as np
 
+# ==========================================
+# 1. IMPORT DATA
+# ==========================================
 @st.cache_data
 def load_data():
+    df = pd.read_csv("data/processed/oecd_productivity_clean.csv")
+    return df
    
 
     np.random.seed(42)
@@ -78,19 +83,19 @@ col1, col2 = st.columns(2)
 with col1:
     st.subheader(f"1. Tương quan Năng suất & Giờ làm ({selected_year})")
     fig_scatter = px.scatter(df_filtered, 
-                             x="AVGHOURS", y="GDPHOUR", 
-                             color="Country", size="RD_GDP",
+                             x="AVG_ANN_HRS", y="GDPHRS", 
+                             color="Country", size="AV_AN_WAGE", # Đổi kích thước bong bóng theo Tiền lương
                              hover_name="Country",
-                             labels={"AVGHOURS": "Số giờ làm/năm", "GDPHOUR": "Năng suất (USD/giờ)"},
+                             labels={"AVG_ANN_HRS": "Số giờ làm/năm", "GDPHRS": "Năng suất (USD/giờ)"},
                              title="Góc trên trái: Lý tưởng (Ít giờ - Năng suất cao)")
     st.plotly_chart(fig_scatter, use_container_width=True)
 
 # BIỂU ĐỒ 2: BAR CHART (So sánh trực diện giá trị 1 giờ làm việc)
 with col2:
     st.subheader(f"2. Giá trị tạo ra trong 1 giờ làm ({selected_year})")
-    fig_bar = px.bar(df_filtered.sort_values("GDPHOUR", ascending=False), 
-                     x="Country", y="GDPHOUR", color="Country",
-                     labels={"GDPHOUR": "Giá trị 1 giờ (USD PPP)", "Country": ""},
+    fig_bar = px.bar(df_filtered.sort_values("GDPHRS", ascending=False), 
+                     x="Country", y="GDPHRS", color="Country",
+                     labels={"GDPHRS": "Giá trị 1 giờ (USD PPP)", "Country": ""},
                      title="So sánh hiệu suất lao động đầu ra")
     st.plotly_chart(fig_bar, use_container_width=True)
 
@@ -100,18 +105,18 @@ col3, col4 = st.columns(2)
 
 # BIỂU ĐỒ 3: LINE CHART KÉP (Xu hướng Năng suất 10 năm)
 with col3:
-    st.subheader("3. Xu hướng tăng trưởng Năng suất (2014 - 2023)")
-    fig_line_prod = px.line(df_trend, x="Year", y="GDPHOUR", color="Country", markers=True,
-                            labels={"GDPHOUR": "Năng suất (USD/giờ)", "Year": "Năm"})
+    st.subheader("3. Xu hướng tăng trưởng Năng suất")
+    fig_line_prod = px.line(df_trend, x="Year", y="GDPHRS", color="Country", markers=True,
+                            labels={"GDPHRS": "Năng suất (USD/giờ)", "Year": "Năm"})
     st.plotly_chart(fig_line_prod, use_container_width=True)
 
 # BIỂU ĐỒ 4: LINE CHART KÉP (Xu hướng Giờ làm việc 10 năm)
 with col4:
-    st.subheader("4. Biến động Số giờ làm việc bình quân (2014 - 2023)")
-    fig_line_hours = px.line(df_trend, x="Year", y="AVGHOURS", color="Country", markers=True, line_dash="Country",
-                             labels={"AVGHOURS": "Số giờ làm bình quân", "Year": "Năm"})
+    st.subheader("4. Biến động Số giờ làm việc bình quân")
+    fig_line_hours = px.line(df_trend, x="Year", y="AVG_ANN_HRS", color="Country", markers=True, line_dash="Country",
+                             labels={"AVG_ANN_HRS": "Số giờ làm bình quân", "Year": "Năm"})
     st.plotly_chart(fig_line_hours, use_container_width=True)
-
+    
 # ==========================================
 # 5. HIỂN THỊ BẢNG DỮ LIỆU ĐỂ KIỂM TRA
 # ==========================================
