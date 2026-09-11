@@ -3,16 +3,10 @@ import pandas as pd
 import plotly.express as px
 import numpy as np
 
-# ==========================================
-# 1. TẠO MOCK DATA THEO ĐÚNG DATA CONTRACT
-# ==========================================
 @st.cache_data
 def load_data():
-    """
-    Hàm này tạm thời sinh Mock Data. 
-    Khi Subteam 2 giao file thật xóa phần sinh dữ liệu giả 
-    và thay bằng lệnh: return pd.read_csv("data/processed/oecd_productivity_clean.csv")
-    """
+   
+
     np.random.seed(42)
     years = list(range(2014, 2024))
     countries = [
